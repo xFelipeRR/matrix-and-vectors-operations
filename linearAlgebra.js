@@ -132,22 +132,87 @@ function transposeMatrix(matrix) {
     return matrixTransposed;
 }
 
-function sumMatrix(matrixA, matrixB) { 
+function sumMatrix(elementA, elementB, type) { 
     var matrixSum = [];
     var matrixTemp = [];
-    if(matrixA.length !== matrixB.length || matrixA[0].length !== matrixB[0].length) {
-        console.error("As matrizes não possuem as mesmas dimensões!");
+    if(type == "matrix") {
+        if(elementA.length !== elementB.length || elementA[0].length !== elementB[0].length) {
+            console.error("As matrizes não possuem as mesmas dimensões!");
+        }
+        else {
+            for(i = 0; i < elementA.length; i++) {
+                for(j = 0; j < elementA[0].length; j++) {
+                    matrixTemp.push(elementA[i][j] + elementB[i][j]);
+                }
+                matrixSum.push(matrixTemp);
+                matrixTemp = [];
+            }
+            console.warn("Matrizes somadas:");
+            console.log(matrixSum);
+            return matrixSum;
+        }
     }
     else {
-        for(i = 0; i < matrixA.length; i++) {
-            for(j = 0; j < matrixA[0].length; j++) {
-                matrixTemp.push(matrixA[i][j] + matrixB[i][j]);
-            }
-            matrixSum.push(matrixTemp);
-            matrixTemp = [];
+        for(i = 0; i < elementA.length; i++) {
+            matrixSum.push(elementA[i] + elementB[i]);
         }
-        console.warn("Matrizes somadas:");
+        console.warn("Vetores somados:");
         console.log(matrixSum);
-        return matrixSum;
+    }
+}
+
+function timesMatrix(elementA, elementB, type) {
+    var matrixTimes = [];
+    var matrixTemp = [];
+    if(type == "matrix") {
+        if(typeof elementA == "number") {
+            for(i = 0; i < elementB.length; i++) {
+                for(j = 0; j < elementB[0].length; j++) {
+                    matrixTemp.push(elementA * elementB[i][j]);
+                }
+                matrixTimes.push(matrixTemp);
+                matrixTemp = [];
+            }
+            console.warn("Matriz multiplicada por escalar:");
+            console.log(matrixTimes);
+            return matrixTimes;
+        }
+        else {
+            if(elementA.length !== elementB.length || elementA[0].length !== elementB[0].length) {
+                console.error("As matrizes não possuem as mesmas dimensões!");
+            }
+            else {
+                for(i = 0; i < elementA.length; i++) {
+                    for(j = 0; j < elementA[0].length; j++) {
+                        matrixTemp.push(elementA[i][j] * elementB[i][j]);
+                    }
+                    matrixTimes.push(matrixTemp);
+                    matrixTemp = [];
+                }
+                console.warn("Matrizes multiplicadas:");
+                console.log(matrixTimes);
+                return matrixTimes;
+            }
+        }
+    }
+    else {
+        if(typeof elementA == "number") {
+            for(i = 0; i < elementB.length; i++) {
+                matrixTimes.push(elementA * elementB[i]);
+            }
+            console.warn("Vetor multiplicado por escalar:");
+            console.log(matrixTimes);
+            return matrixTimes;
+        }
+        if(elementA.length !== elementB.length || elementA[0].length !== elementB[0].length) {
+            console.error("Os vetores não possuem as mesmas dimensões!");
+        }
+        else {
+            for(i = 0; i < elementA.length; i++) {
+                matrixTimes.push(elementA[i] * elementB[i]);
+            }
+            console.warn("Vetores multiplicados:");
+            console.log(matrixTimes);
+        }
     }
 }
