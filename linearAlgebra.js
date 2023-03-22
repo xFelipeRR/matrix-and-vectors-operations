@@ -216,3 +216,123 @@ function timesMatrix(elementA, elementB, type) {
         }
     }
 }
+
+function dotMatrix(matrixA, matrixB, type) {
+    if(type == "matrix") {
+        const rowsA = matrixA.length;
+        const colsA = matrixA[0].length;
+        const rowsB = matrixB.length;
+        const colsB = matrixB[0].length;
+        if (colsA !== rowsB) {
+            throw new Error(`O número de colunas da matriz A (${colsA}) não é igual ao número de linhas da matriz B (${rowsB}).`);
+        }
+
+        const result = new Array(rowsA);
+        for (let i = 0; i < rowsA; i++) {
+            result[i] = new Array(colsB);
+            for (let j = 0; j < colsB; j++) {
+            let sum = 0;
+            for (let k = 0; k < colsA; k++) {
+                sum += matrixA[i][k] * matrixB[k][j];
+            }
+            result[i][j] = sum;
+            }
+        }
+        console.log(result);
+        return result;
+    }
+    else {
+        if (matrixA.length !== matrixB.length) {
+            throw new Error("Os vetores não possuem as mesmas dimensões!");
+        }
+        var result = 0;
+        for(i = 0; i < matrixA.length; i++) {
+            result += matrixA[i] * matrixB[i];
+        }
+        console.log(result);
+        return result;
+    }
+}
+
+function gauss(matriz) {
+  const linhas = matriz.length;
+  const colunas = matriz[0].length;
+  let pivo, temp;
+
+  for (let i = 0; i < linhas; i++) {
+    // Encontrar o pivô da linha atual
+    pivo = matriz[i][i];
+
+    // Se o pivô for zero, trocar por outro elemento da mesma coluna
+    if (pivo === 0) {
+      for (let j = i + 1; j < linhas; j++) {
+        if (matriz[j][i] !== 0) {
+          // Trocar as linhas i e j
+          temp = matriz[i];
+          matriz[i] = matriz[j];
+          matriz[j] = temp;
+          pivo = matriz[i][i];
+          break;
+        }
+      }
+    }
+
+    // Se não existir pivô para a linha, passar para a próxima linha
+    if (pivo === 0) {
+      continue;
+    }
+
+    // Dividir toda a linha pelo pivô
+    for (let j = i + 1; j < colunas; j++) {
+      matriz[i][j] /= pivo;
+    }
+    matriz[i][i] = 1;
+
+    // Eliminar os elementos abaixo do pivô
+    for (let j = i + 1; j < linhas; j++) {
+      temp = matriz[j][i];
+      matriz[j][i] = 0;
+      for (let k = i + 1; k < colunas; k++) {
+        matriz[j][k] -= temp * matriz[i][k];
+      }
+    }
+  }
+
+  return matriz;
+}
+
+function solver(A, B) {
+  const linhas = A.length;
+  const colunas = A[0].length;
+  const solucao = new Array(linhas);
+
+  // Verificar se o sistema é possível e determinado
+  for (let i = 0; i < linhas; i++) {
+    let soma = 0;
+    for (let j = 0; j < colunas; j++) {
+      soma += A[i][j];
+    }
+    if (soma === 0 && B[i][0] !== 0) {
+      // Sistema impossível
+      return {classificacao: 'impossivel', solucao: null};
+    } else if (soma === 0 && B[i][0] === 0) {
+      // Linha nula
+      solucao[i] = 0;
+    } else {
+      // Sistema possível e determinado
+      break;
+    }
+  }
+
+  // Resolver o sistema linear
+  for (let i = linhas - 1; i >= 0; i--) {
+    let soma = 0;
+    for (let j = i + 1; j < colunas; j++) {
+      soma += A[i][j] * solucao[j];
+    }
+    solucao[i] = (B[i][0] - soma) / A[i][i];
+  }
+
+  return {classificacao: 'possivel e determinado', solucao};
+}
+
